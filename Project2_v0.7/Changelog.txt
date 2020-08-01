@@ -1,0 +1,6 @@
+Start of Project 2
+Project 0.6 -> 0.7 
+To All Classes
+Added Ogre boss fight
+Added Skeleton Giant Boss Fight
+Added Comments on how to Balance the Game 
