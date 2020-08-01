@@ -1,0 +1,6 @@
+Start of Project 2
+Project 0.5 -> 0.6 
+Showed the 6 Bosses the PLayer will be Fighting 
+Added Skeletons fight to all three classes 
+Revamp Game Over with Exit Function
+Setup 2d Arrays to assist in next boss creations
