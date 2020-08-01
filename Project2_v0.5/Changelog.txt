@@ -1,0 +1,7 @@
+Start of Project 2
+Project 1 -> Project 2 v0.5
+Converted Goblin's Boss Battle to a Function
+Converted Start Menu
+and Class Menu into a function
+Added String Array to allow all the classes to use the same boss battle function for goblins
+Cleaned up the code with functions, reduced orginal code at ~300 lines to 221
