@@ -23,7 +23,7 @@ using namespace std;
 char start1(); // Basic Menu to Start the Game
 void start2(char , char &, string &, string oldsc);
 bool capt(vector <int> &, int); //Captcha to detect boting 
-void showmobs(string[][4]); //Displays the Mobs able to be fought 
+void smobs(string[][4]); //Displays the Mobs able to be fought 
 int atkcalc(int, int); // Calculates Attack value
 void compsc(); // Shows Completion Value 
 bool gfight(string [], int &, int , int, int ,int &, //Goblin Battle
@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
       } 
     //Attack values depend on xp and class 
     atk=atkcalc(njob,xp); 
-    showmobs(bosses);
+    smobs(bosses);
     if (njob==49) //If the class chosen is Mage 
     {
       compsc();
@@ -363,7 +363,7 @@ bool capt(vector <int> &a, int n){
         return true;
     }
 }
-void showmobs(string bosses[][4]){
+void smobs(string bosses[][4]){
     cout<<"Mob List"<<endl;
     for(int i=0; i<2; i++){
         for(int j=0; j<3; j++){
