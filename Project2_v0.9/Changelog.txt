@@ -1,0 +1,10 @@
+Start of Project 2
+Project 0.8 -> 0.9 
+Anti-Cheating
+Added a Capcha system to avoid botting 
+
+To All Classes
+Added the Final Boss the Dragon
+Added the new ability block and heal, which was learned from killing the dark mage
+
+
