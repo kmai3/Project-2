@@ -1,7 +1,7 @@
 /*
  * File:   main.cpp
  * Author: Kevin Mai
- * Created on August 1, 2020, 4:38 PM
+ * Created on August 1, 2020, 5:00 PM
  * Purpose: Dungeons and Dragon Board Game Project
  */
 
@@ -12,6 +12,7 @@
 #include <fstream> // To put in files
 #include <cstdlib> //Random Seed Time, Exit Function 
 #include <ctime> //Random Seed
+#include <vector> // Vectors 
 using namespace std;
 
 //User Libraries
@@ -23,13 +24,16 @@ char start1(); // Basic Menu to Start the Game
 void start2(char , char &, string &, string oldsc);
 void showmobs(string[][4]);
 int atkcalc(int, int);
-bool gobfight(string [], int &, int , int, int ,int &, 
+void compsc();
+bool gfight(string [], int &, int , int, int ,int &, //Goblin Battle
             int, int, float &, int, int, int, int);
-bool skelfight(string [], int &, int, int, int, int &,
+bool sfight(string [], int &, int, int, int, int &, //Skeleton Battle
             int, int, float &, int, int, int, int);
-bool ogrefight(string [], int &, int, int, int, int &,
+bool ofight(string [], int &, int, int, int, int &, //Ogre Battle
             int, int, float &, int, int, int, int, string[][4]);
-bool skelGfight(string [], int &, int, int, int, int &,
+bool sGfght(string [], int &, int, int, int, int &,//Skeleton Giant Battle
+            int, int, float &, int, int, int, int, string[][4]);
+bool dMfght(string [], int &, int, int, int, int &, //Dark Mage Battle
             int, int, float &, int, int, int, int, string[][4]);
 //Execution of Code Begins here
 int main(int argc, char** argv) {
@@ -47,16 +51,19 @@ int main(int argc, char** argv) {
         skelhp, //HP of the Skeleton
         ogrehp, //HP of the ogre
         gskhp, //HP of the Skeleton Giant 
+        dmhp, //Hp of the Darkmage
         job, //job
         gatk, //Attack of the Goblin
         satk, //Attack of the Skeleton
         oatk, //Attack of the Ogre
         gsatk, //Attack of the Skeleton Giant 
+        dMatk, //Attack of the Dark Mage
         datk, //Attack of the Dragon
         rgob, //Rounds to beat goblin
         rskel, //Rounds to beat skeleton
         rogre, //Rounds to beat the ogre
         rgskel, //Rounds to beat Giant Skeleton
+        rDMage, //Rounds to beat the Dark Mage
         rdrag, //Rounds to beat the dragon
         xp, // The amount of xp of the character, makes the character stronger
         draghp; //HP of the Dragon
@@ -81,18 +88,21 @@ int main(int argc, char** argv) {
     skelhp=20;
     ogrehp=30;
     gskhp=56;
+    dmhp=40;
     draghp=100;
     gatk=1;
     satk=2;
     oatk=5;
     gsatk=10;
-    datk=15;
+    dMatk=20;
+    datk=20;
     //Amount of Rounds to beat the bosses
     rgob=9;
     rskel=5;
     rogre=5;
     rgskel=5;
-    rdrag=10;
+    rDMage=10;
+    rdrag=20;
     score=100;
     oldsc="";
     string temp; //Temp String for scoreboard
@@ -111,78 +121,128 @@ int main(int argc, char** argv) {
     showmobs(bosses);
     if (njob==49) //If the class chosen is Mage 
     {
-      cont=gobfight(rclass, magehp, gobhp, atk, cd, xp, 
+      compsc();
+      cont=gfight(rclass, magehp, gobhp, atk, cd, xp, 
                     gatk, rgob, score, 0, 1, 2, 3 ); //First Goblin Fight
       if (cont=false){ //Checks for Game Over
           exit(0);
       }
+      else compsc();
       atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
-      cont=skelfight(rclass, magehp, skelhp, atk, cd, xp,
+      cont=sfight(rclass, magehp, skelhp, atk, cd, xp,
                      satk, rskel, score, 0, 1, 2, 3);//Skeleton Fight 
       if (cont=false){ //Checks for Game Over
           exit(0);
       }
+      else compsc();
       atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
-      cont=ogrefight(rclass, magehp, ogrehp, atk, cd, xp,
+      cont=ofight(rclass, magehp, ogrehp, atk, cd, xp,
                      oatk, rogre, score, 0, 1, 2, 3, bosses);//Ogre Fight
       if (cont=false){ //Checks for Game Over
           exit(0);
       }
+      else compsc();
       atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
-      cont=skelGfight(rclass, magehp, gskhp, atk, cd, xp,
+      cont=sGfght(rclass, magehp, gskhp, atk, cd, xp,
                       gsatk, rgskel, score, 0, 1, 2, 3, bosses);
       //^Skeleton Giant Fight
-
+      if (cont=false){ //Checks for Game Over
+          exit(0);
+      }
+      else compsc();
+      atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
+      cont=dMfght(rclass, magehp, dmhp, atk, cd, xp,
+                      dMatk, rDMage, score, 0, 1, 2, 3, bosses);
+      //^Dark Mage Fight
+      if (cont=false){ //Checks for Game Over
+          exit(0);
+      }
+      else compsc();
     }
+    // End of Mage Code
     if (njob==50) //If the class chosen is Ranger
     {
-        cont=gobfight(rclass, rhp, gobhp, atk, cd, //First Goblin Fight
+        compsc();
+        cont=gfight(rclass, rhp, gobhp, atk, cd, //First Goblin Fight
                     xp, gatk, rgob, score, 4,5,6,7);
         if (cont=false){
             exit(0);
            }
+        else compsc();
         atk=atkcalc(njob,xp); //Levels up and changes attack value 
-        cont=skelfight(rclass, rhp, skelhp, atk, cd, xp,
+        cont=sfight(rclass, rhp, skelhp, atk, cd, xp,
                      satk, rskel, score, 4, 5, 6, 7); //Skeleton Fight
         if (cont=false){ //Checks for Game Over
           exit(0);
         }
+        else compsc();
         atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
-        cont=ogrefight(rclass, rhp, ogrehp, atk, cd, xp,
+        cont=ofight(rclass, rhp, ogrehp, atk, cd, xp,
                      oatk, rogre, score, 4, 5, 6, 7, bosses); //Ogre Fight
         if (cont=false){ //Checks for Game Over
           exit(0);
         }
+        else compsc();
         atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
-        cont=skelGfight(rclass, rhp, gskhp, atk, cd, xp,
+        cont=sGfght(rclass, rhp, gskhp, atk, cd, xp,
                       gsatk, rgskel, score, 4, 5, 6, 7, bosses);
         //^Skeleton Giant Fight
-        
+        if (cont=false){ //Checks for Game Over
+          exit(0);
+        }
+        else compsc();
+        atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
+        cont=dMfght(rclass, rhp, dmhp, atk, cd, xp,
+                      dMatk, rDMage, score, 4, 5, 6, 7, bosses);
+         //^Dark Mage Fight
+        if (cont=false){ //Checks for Game Over
+          exit(0);
+        }
+        else compsc();
     }
+    // End of Ranger Code
     if (njob==51) //If the class chosen is Fighter
     {
-        cont=gobfight(rclass, fhp, gobhp, atk, cd, xp, //First Goblin Fight
+        compsc();
+        cont=gfight(rclass, fhp, gobhp, atk, cd, xp, //First Goblin Fight
                     gatk, rgob, score, 8,9,10,11);
         atk=atkcalc(njob,xp); //Levels up and changes attack value
         if(cont=false){
             exit(0);
         }
-        cont=skelfight(rclass, fhp, skelhp, atk, cd, xp,
+        else compsc();
+        cont=sfight(rclass, fhp, skelhp, atk, cd, xp,
                         satk, rskel, score, 8, 9, 10, 11); //Skeleton Fight
         if (cont=false){ //Checks for Game Over
           exit(0);
         }
+        else compsc();
         atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
-        cont=ogrefight(rclass, fhp, ogrehp, atk, cd, xp,
+        cont=ofight(rclass, fhp, ogrehp, atk, cd, xp,
                      oatk, rogre, score, 8, 9, 10, 11, bosses); //Ogre Fight 
         if (cont=false){ //Checks for Game Over
           exit(0);
         }
+        else compsc();
         atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
-        cont=skelGfight(rclass, fhp, gskhp, atk, cd, xp,
+        cont=sGfght(rclass, fhp, gskhp, atk, cd, xp,
                       gsatk, rgskel, score, 8, 9, 10, 11, bosses);
-      //^Skeleton Giant Fight
+        //^Skeleton Giant Fight
+        if (cont=false){ //Checks for Game Over
+          exit(0);
+        }
+        else compsc();
+        atk=atkcalc(njob,xp); //Levels up and Changes Attack Value 
+        cont=dMfght(rclass, fhp, dmhp, atk, cd, xp,
+                      dMatk, rDMage, score, 8, 9, 10, 11, bosses);
+         //^Dark Mage Fight
+        if (cont=false){ //Checks for Game Over
+          exit(0);
+        }
+        else compsc();
     }
+    //End of Fighter's Code
+    
     //Score Showing in the txt file
     file << oldsc;
     file <<fixed << name <<setw(7) << setprecision(2) << score << endl;
@@ -244,7 +304,12 @@ int atkcalc(int njob, int xp){
     atk=(njob==49) ? 2+2*xp:(njob==50)? 2+pow(2,xp):4+xp; 
     return atk;
 }
-bool gobfight(string rclass[], int &hp, int gobhp,int atk,int cd,int &xp, 
+void compsc(){
+    static int cscore=0; //Completion Score 
+    cout<<"Your Completion Score is "<<cscore<<endl;
+    cscore++; 
+}
+bool gfight(string rclass[], int &hp, int gobhp,int atk,int cd,int &xp, 
         int gatk, int rgob, float &score, int move1, int move2, 
         int move3, int move4){
     bool cont;
@@ -306,7 +371,7 @@ bool gobfight(string rclass[], int &hp, int gobhp,int atk,int cd,int &xp,
      }
      return cont;
 }
-bool skelfight(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp, 
+bool sfight(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp, 
         int aboss, int rboss, float &score, int move1, int move2, 
         int move3, int move4){
     bool cont;
@@ -369,7 +434,7 @@ bool skelfight(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp,
      }
      return cont;
 }
-bool ogrefight(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp, 
+bool ofight(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp, 
         int aboss, int rboss, float &score, int move1, int move2, 
         int move3, int move4, string bosses[][4]){
     bool cont;
@@ -432,7 +497,7 @@ bool ogrefight(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp,
      }
      return cont;
 }
-bool skelGfight(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp, 
+bool sGfght(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp, 
         int aboss, int rboss, float &score, int move1, int move2, 
         int move3, int move4, string bosses[][4]){
     bool cont;
@@ -492,7 +557,72 @@ bool skelGfight(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp,
      if(cont==true) //continues down the dungeon if skeleton was killed
      {
          cout<<"Down the Dungeon you go"<<endl;
-         cout<<"Available in the next update"<<endl;
+     }
+     return cont;
+}
+bool dMfght(string rclass[], int &hp, int bosshp,int atk,int cd,int &xp, 
+        int aboss, int rboss, float &score, int move1, int move2, 
+        int move3, int move4, string bosses[][4]){
+    bool cont;
+    do{ //Battle Begins!
+         cout<<"You went further down the dungeon"<<endl;
+         cout<<"A"<<bosses[1][1]<<"approaches"<<endl; 
+         cout<<"Battle"<<endl;
+             int dmg1;
+             cout<<fixed;
+             cout<<"The "<<bosses[1][1]<<" has "<<bosshp<<" Hp"<<endl;
+             cout<<"You have "<<hp<<"Hp"<<endl;
+             cout<<"You have "<<rboss;
+             cout<<" rounds left before reinforcements"<<endl;
+             cout<<"Pick your ability "<<endl;
+             cout<<"Enter 1 for "<<rclass[move1]<<endl;
+             cout<<"Enter 2 for "<<rclass[move2]<<endl; 
+             cout<<"Enter 3 for "<<rclass[move3]<<endl;
+             cout<<"Enter 4 for "<<rclass[move4]<<endl;
+             cin>>dmg1;
+             switch(dmg1){ //Menu for picking abilities 
+                 case 1: bosshp=bosshp-(atk/cd);break;
+                 case 2: bosshp=bosshp-(atk/cd);break;
+                 case 3: bosshp=bosshp-(atk*2);break;
+                 case 4: bosshp=bosshp-(atk/cd);break;
+                 default: cout<<"What ability did you use?, hurry you are dying"
+                         <<endl;
+                 cin>>dmg1;break;
+             }
+         score-=1;
+         rboss-=1;
+         hp-=aboss;
+         //Stops the loops when someone dies or reinforcements come 
+     }while(hp>0 && rboss>0 && bosshp>0); 
+     for(int i=1; i<25; i++) //For Visual Seperation of the End Game 
+     {
+         cout<<"*";
+     }
+     cout<<endl;
+     if (bosshp<=0){ //If Kills the Skeleton
+         cout<<"Congrats You have killed the "<<bosses[1][1]<<endl;
+         cout<<"You have gained a Level"<<endl;
+         xp=xp+1;
+         cont=true;
+     }
+     if (rboss<=0){ //If Reinforcements came
+         cout<<bosses[1][1]<<"Reinforcements have came"<<endl;
+         cout<<"Game Over"<<endl;
+         score=score/2;
+         cont=false;
+     }
+     if (hp<=0){ //If Player Died 
+         cout<<"You have Died"<<endl;
+         cout<<"Game Over"<<endl;
+         score=score/4;
+         cont=false;
+     }
+     if(cont==true) //continues down the dungeon if skeleton was killed
+     {
+         cout<<"Down the Dungeon you go"<<endl;
+         cout<<"Fighting the Dark Mage has taught you how to self heal"<<endl;
+         cout<<"You can now self heal and block at the same time"<<endl;
+         cout<<"Added on the next Update"<<endl;
      }
      return cont;
 }
